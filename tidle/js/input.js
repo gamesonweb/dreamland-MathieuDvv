@@ -10,16 +10,17 @@ class InputManager {
         this.game = game;
         this.player = game.player;
         
+        // Detect keyboard layout
+        this.isQWERTY = this.detectKeyboardLayout();
+        
         // Initialiser les états des touches
         this.keys = {
-            z: false,
-            s: false,
-            q: false,
-            d: false,
+            forward: false,  // Z or W
+            backward: false, // S
+            left: false,     // Q or A
+            right: false,    // D
             space: false,
             e: false, // Ajouter la touche E pour l'interaction
-            w: false,
-            a: false,
             arrowup: false,
             arrowdown: false,
             arrowleft: false,
@@ -36,6 +37,62 @@ class InputManager {
         this.setupEventListeners();
         
         console.log("Gestionnaire d'entrées initialisé");
+        console.log("Keyboard layout detected:", this.isQWERTY ? "QWERTY" : "AZERTY");
+    }
+    
+    /**
+     * Detect keyboard layout based on key positions
+     * @returns {boolean} true if QWERTY, false if AZERTY
+     */
+    detectKeyboardLayout() {
+        // Create a temporary input element
+        const input = document.createElement('input');
+        input.style.position = 'absolute';
+        input.style.opacity = 0;
+        document.body.appendChild(input);
+        
+        // Focus the input
+        input.focus();
+        
+        // Create a keydown event
+        const event = new KeyboardEvent('keydown', {
+            key: 'z',
+            code: 'KeyZ'
+        });
+        
+        // Dispatch the event
+        input.dispatchEvent(event);
+        
+        // Check if the key is 'z' (AZERTY) or 'w' (QWERTY)
+        const isQWERTY = event.key === 'w';
+        
+        // Clean up
+        document.body.removeChild(input);
+        
+        return isQWERTY;
+    }
+    
+    /**
+     * Get the appropriate key for a given action based on keyboard layout
+     * @param {string} action - The action to get the key for ('forward', 'backward', 'left', 'right')
+     * @returns {string} The key to use for the action
+     */
+    getKeyForAction(action) {
+        if (this.isQWERTY) {
+            switch (action) {
+                case 'forward': return 'w';
+                case 'backward': return 's';
+                case 'left': return 'a';
+                case 'right': return 'd';
+            }
+        } else {
+            switch (action) {
+                case 'forward': return 'z';
+                case 'backward': return 's';
+                case 'left': return 'q';
+                case 'right': return 'd';
+            }
+        }
     }
     
     /**
@@ -63,57 +120,49 @@ class InputManager {
             return;
         }
         
+        const key = event.key.toLowerCase();
+        
         // Gérer les pressions de touches
-        switch (event.key.toLowerCase()) {
-            // Contrôles de mouvement
-            case 'z': 
-                if (this.freeCamMode) {
-                    // Mouvement de caméra libre géré séparément
-                } else {
-                    this.game.player.input.forward = -1; 
-                }
-                break;
-            case 's': 
-                if (this.freeCamMode) {
-                    // Mouvement de caméra libre géré séparément
-                } else {
-                    this.game.player.input.forward = 1; 
-                }
-                break;
-            case 'q': 
-                if (this.freeCamMode) {
-                    // Mouvement de caméra libre géré séparément
-                } else {
-                    this.game.player.input.turn = -1; 
-                }
-                break;
-            case 'd': 
-                if (this.freeCamMode) {
-                    // Mouvement de caméra libre géré séparément
-                } else {
-                    this.game.player.input.turn = 1; 
-                }
-                break;
-            case ' ': 
-                this.game.player.input.boost = true; 
-                break;
-            
-            // Touche d'interaction
-            case 'e': 
-                this.keys.e = true;
-                break;
-            
-            // Contrôles du jeu
-            case 'p': 
-                this.toggleInspector();
-                break;
-            case 'f': this.toggleFpsCounter(); break;
-            case 'o': this.cycleMapMode(); break;
-            case 'm': this.toggleMusic(); break;
-            case 'c': this.toggleFreeCameraMode(); break;
-            case 'l': this.cycleCameraMode(); break;
-            case 'i': this.cyclePlayAreaSize(); break;
-            case 'y': this.toggleChunkDebugMode(); break;
+        if (key === this.getKeyForAction('forward')) {
+            if (this.freeCamMode) {
+                // Mouvement de caméra libre géré séparément
+            } else {
+                this.game.player.input.forward = -1;
+            }
+        } else if (key === this.getKeyForAction('backward')) {
+            if (this.freeCamMode) {
+                // Mouvement de caméra libre géré séparément
+            } else {
+                this.game.player.input.forward = 1;
+            }
+        } else if (key === this.getKeyForAction('left')) {
+            if (this.freeCamMode) {
+                // Mouvement de caméra libre géré séparément
+            } else {
+                this.game.player.input.turn = -1;
+            }
+        } else if (key === this.getKeyForAction('right')) {
+            if (this.freeCamMode) {
+                // Mouvement de caméra libre géré séparément
+            } else {
+                this.game.player.input.turn = 1;
+            }
+        } else if (key === ' ') {
+            this.game.player.input.boost = true;
+        } else if (key === 'e') {
+            this.keys.e = true;
+        } else {
+            // Handle other controls
+            switch (key) {
+                case 'p': this.toggleInspector(); break;
+                case 'f': this.toggleFpsCounter(); break;
+                case 'o': this.cycleMapMode(); break;
+                case 'm': this.toggleMusic(); break;
+                case 'c': this.toggleFreeCameraMode(); break;
+                case 'l': this.cycleCameraMode(); break;
+                case 'i': this.cyclePlayAreaSize(); break;
+                case 'y': this.toggleChunkDebugMode(); break;
+            }
         }
     }
     
@@ -146,26 +195,17 @@ class InputManager {
      * @param {KeyboardEvent} event - L'événement clavier
      */
     handleKeyUp(event) {
-        // Obtenir le code de la touche
         const key = event.key.toLowerCase();
         
         // Gérer le relâchement de touche
-        switch (key) {
-            // Mouvement
-            case 'z': 
-            case 's': 
-                this.game.player.input.forward = 0;
-                break;
-            case 'q': 
-            case 'd': 
-                this.game.player.input.turn = 0;
-                break;
-            case ' ': 
-                this.game.player.input.boost = false;
-                break;
-            case 'e': 
-                this.keys.e = false;
-                break;
+        if (key === this.getKeyForAction('forward') || key === this.getKeyForAction('backward')) {
+            this.game.player.input.forward = 0;
+        } else if (key === this.getKeyForAction('left') || key === this.getKeyForAction('right')) {
+            this.game.player.input.turn = 0;
+        } else if (key === ' ') {
+            this.game.player.input.boost = false;
+        } else if (key === 'e') {
+            this.keys.e = false;
         }
     }
     
