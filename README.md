@@ -3,6 +3,13 @@
 Gameplay : 
 https://drive.google.com/drive/folders/1QELm5mIK_VxTZ8KQ8dXrw634FTee1OCJ?usp=sharing
 
+
+Inputs : 
+ZQSD/WASD -> Look up, left, right and down / Regarder vers le haut, la gauche, la droite et en bas
+Space -> Go forward / Avancer
+
+-----------------------------------
+
 Quand nous avons découvert le thème Dreamland, cela nous a tout de suite fait penser à la nostalgie. À ces souvenirs flous mais réconfortants des jeux de notre enfance. On s’est souvenus de cette époque où les jeux étaient pleins de couleurs, même avec des graphismes limités. Une période où les environnements tropicaux étaient omniprésents : des plages, des océans, des palmiers, des dauphins… Ce sont des images qui font rêver, même aujourd’hui.
 
 Nous avons rejoué à des jeux comme Celeste et Project Blari, qui s’inspirent clairement de l’esthétique rétro. Puis nous sommes retombés sur Abzû et surtout Endless Ocean, un jeu que nous avions adoré sur Wii. Ce fut un vrai choc nostalgique. L’exploration, la tranquillité sous-marine, cette sensation d’être dans un rêve.
