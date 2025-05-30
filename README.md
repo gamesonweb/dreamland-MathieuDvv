@@ -3,6 +3,8 @@
 Gameplay : 
 https://drive.google.com/drive/folders/1QELm5mIK_VxTZ8KQ8dXrw634FTee1OCJ?usp=sharing
 
+Host :
+https://tidle.vercel.app/
 
 Inputs : 
 ZQSD/WASD -> Look up, left, right and down / Regarder vers le haut, la gauche, la droite et en bas
